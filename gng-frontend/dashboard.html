@@ -1,0 +1,229 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Dashboard | Grind 'n Grow</title>
+
+  <!-- FullCalendar -->
+  <link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/main.min.css" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/main.min.js"></script>
+
+  <!-- Chart.js -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.3.0/dist/chart.umd.min.js"></script>
+
+  <link rel="stylesheet" href="dashboard.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <nav class="navbar">
+    <div class="brand">Grind 'n Grow</div>
+    <div class="nav-actions">
+      <span id="currentUser" class="user-badge"></span>
+      <a id="tryFree" href="dashboard.html" class="btn-try">Try It for Free</a>
+      <button id="logoutBtn" class="btn-ghost">Logout</button>
+      <button id="clearGuest" class="btn-ghost" title="Clear guest data">Clear Guest</button>
+    </div>
+  </nav>
+
+  <div class="layout">
+    <aside class="sidebar">
+      <ul>
+        <li class="active" data-tab="overview">Overview</li>
+        <li data-tab="tasks">Tasks</li>
+        <li data-tab="calendar">Calendar</li>
+        <li data-tab="progress">Progress</li>
+      </ul>
+    </aside>
+
+    <main class="main">
+      <!-- Overview -->
+      <section id="overview" class="tab active">
+        <div class="top-cards">
+          <div class="card">
+            <h3>Total Tasks</h3>
+            <p id="totalTasks">0</p>
+          </div>
+          <div class="card">
+            <h3>Completed</h3>
+            <p id="completedTasks">0</p>
+          </div>
+          <div class="card">
+            <h3>Upcoming</h3>
+            <p id="upcomingTasks">0</p>
+          </div>
+        </div>
+
+        <div class="content-row">
+          <div class="card wide">
+            <h3>Quick Add Task</h3>
+            <form id="addTaskForm">
+              <div class="row">
+                <input id="taskTitle" placeholder="Task title" required />
+                <input id="taskSubject" placeholder="Subject (optional)" />
+              </div>
+              <div class="row">
+                <input id="taskDeadline" type="date" />
+                <input id="taskHours" type="number" step="0.5" min="0" placeholder="Hours" />
+                <select id="taskPriority">
+                  <option value="1">High</option>
+                  <option value="2" selected>Medium</option>
+                  <option value="3">Low</option>
+                </select>
+              </div>
+              <div style="margin-top:12px">
+                <button class="btn-primary" type="submit">Add Task</button>
+                <button id="generateBtn" type="button" class="btn-primary" style="margin-left:10px">Generate Week</button>
+              </div>
+            </form>
+          </div>
+
+          <div class="card">
+            <h3>Today's Calendar</h3>
+            <div id="miniCalendar" style="height:260px;"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Tasks -->
+      <section id="tasks" class="tab">
+        <div class="card">
+          <h3>My Tasks</h3>
+          <div id="tasksList"></div>
+        </div>
+      </section>
+      <!-- Task Timer -->
+<div id="task-timer" class="timer-container" style="display:none;">
+  <div class="timer-circle">
+    <svg width="200" height="200">
+      <circle cx="100" cy="100" r="90" stroke="#e0e0e0" stroke-width="10" fill="none"/>
+      <circle id="progress-ring" cx="100" cy="100" r="90" stroke="#007bff" stroke-width="10" fill="none"
+              stroke-linecap="round" transform="rotate(-90 100 100)" />
+    </svg>
+    <div class="timer-text" id="timer-display">00:00</div>
+  </div>
+  <button id="pause-btn" class="pause-btn">⏸ Pause</button>
+</div>
+
+
+      <!-- Calendar -->
+      <section id="calendar" class="tab">
+        <div class="card">
+          <h3>Full Calendar</h3>
+          <div id="fullCalendar" style="max-width: 100%;"></div>
+        </div>
+      </section>
+
+<!-- Progress -->
+<section id="progress" class="tab">
+  <div class="card">
+    <h3>Progress</h3>
+    <div style="display:flex;justify-content:center;align-items:center;height:300px;">
+      <canvas id="progressChart" width="250" height="250"></canvas>
+    </div>
+
+    <!-- NEW: Motivational Quote -->
+    <div class="quote-container">
+      <h2 id="motivational-quote">"You're doing great — keep going!"</h2>
+    </div>
+  </div>
+</section>
+
+    </main>
+  </div>
+
+  <script>
+    // === FULLCALENDAR INIT ===
+    document.addEventListener('DOMContentLoaded', function() {
+      const calendarEl = document.getElementById('fullCalendar');
+      const miniCalendarEl = document.getElementById('miniCalendar');
+
+      if (calendarEl) {
+        const calendar = new FullCalendar.Calendar(calendarEl, {
+          initialView: 'dayGridMonth',
+          selectable: true,
+          editable: true,
+          events: JSON.parse(localStorage.getItem('gngEvents') || '[]'),
+          dateClick: function(info) {
+            const title = prompt('Enter event title:');
+            if (title) {
+              const newEvent = { title, start: info.dateStr };
+              calendar.addEvent(newEvent);
+              const events = calendar.getEvents().map(e => ({ title: e.title, start: e.startStr }));
+              localStorage.setItem('gngEvents', JSON.stringify(events));
+            }
+          }
+        });
+        calendar.render();
+      }
+
+      // === Mini Calendar (Today's View) ===
+      if (miniCalendarEl) {
+        const mini = new FullCalendar.Calendar(miniCalendarEl, {
+          initialView: 'dayGridDay',
+          headerToolbar: false,
+          events: JSON.parse(localStorage.getItem('gngEvents') || '[]')
+        });
+        mini.render();
+      }
+    });
+
+    // === PROGRESS CIRCLE CHART ===
+    document.addEventListener('DOMContentLoaded', function() {
+      const ctx = document.getElementById('progressChart');
+      if (ctx) {
+        const completed = parseInt(localStorage.getItem('completedTasks') || 0);
+        const total = parseInt(localStorage.getItem('totalTasks') || 1);
+        const progress = Math.round((completed / total) * 100);
+
+        new Chart(ctx, {
+          type: 'doughnut',
+          data: {
+            labels: ['Completed', 'Remaining'],
+            datasets: [{
+              data: [progress, 100 - progress],
+              backgroundColor: ['#00c853', '#e0e0e0'],
+              borderWidth: 0
+            }]
+          },
+          options: {
+            cutout: '75%',
+            plugins: {
+              legend: { display: false },
+              tooltip: { enabled: false },
+              beforeDraw: (chart) => {
+                const { ctx, chartArea: { width, height } } = chart;
+                ctx.save();
+                ctx.font = 'bold 24px Montserrat';
+                ctx.fillStyle = '#333';
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+                ctx.fillText(`${progress}%`, width / 2, height / 2);
+                ctx.restore();
+              }
+            }
+          }
+        });
+      }
+    });
+
+
+  </script>
+
+  <script src="dashboard.js"></script>
+  <!-- FullCalendar CSS -->
+<link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.css" rel="stylesheet">
+
+<!-- FullCalendar JS -->
+<script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js"></script>
+<!-- Motivational Popup -->
+<div id="motivationalPopup" class="popup-overlay">
+  <div class="popup-content">
+    <button id="closePopup" class="close-btn">&times;</button>
+    <h2>Hi there!! 👋</h2>
+    <p id="quoteText">"Believe you can and you're halfway there."</p>
+  </div>
+</div>
+
+</body>
+</html>

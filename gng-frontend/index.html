@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Grind 'n Grow</title>
+  <link rel="stylesheet" href="style.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <canvas id="backgroundCanvas"></canvas>
+
+<nav>
+  <div class="logo">Grind ‘n Grow</div>
+  <ul>
+    <li><a href="index.html">Home</a></li>
+    <li><a href="about.html">About</a></li>
+    <li><a href="login.html">Login</a></li>
+    <li><a href="dashboard.html" class="btn-try">Try It for Free</a></li>
+  </ul>
+</nav>
+
+
+
+  <section class="hero">
+    <div class="content">
+      <h1>Your Personal Study Planner</h1>
+      <p>Track. Focus. Grow. </p>
+        <P>Devoloped by team HACK SPIRITS</P>
+      <button class="btn" onclick="redirectToLogin()">Get Started</button>
+
+<script>
+  function redirectToLogin() {
+    window.location.href = "login.html";
+  }
+</script>
+
+    </div>
+  </section>
+
+  <script>
+    const canvas = document.getElementById('backgroundCanvas');
+    const ctx = canvas.getContext('2d');
+
+    function resizeCanvas() {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    }
+    window.addEventListener('resize', resizeCanvas);
+    resizeCanvas();
+
+    const particles = Array.from({ length: 60 }, () => ({
+      x: Math.random() * canvas.width,
+      y: Math.random() * canvas.height,
+      radius: Math.random() * 2,
+      dx: (Math.random() - 0.5) * 1.5,
+      dy: (Math.random() - 0.5) * 1.5
+    }));
+
+    function drawParticles() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.fillStyle = "#9aa0a6";
+      particles.forEach(p => {
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+        ctx.fill();
+        p.x += p.dx;
+        p.y += p.dy;
+
+        if (p.x < 0 || p.x > canvas.width) p.dx *= -1;
+        if (p.y < 0 || p.y > canvas.height) p.dy *= -1;
+      });
+      requestAnimationFrame(drawParticles);
+    }
+    drawParticles();
+  
+    
+  </script>
+    <footer> 
+      <p>© 2025 Grind ‘n Grow. All Rights Reserved.</p>
+    </footer>
+</body>
+</html>
