@@ -1,10 +1,10 @@
-# 🌱 Grind ’n Grow – Smart Study & Focus Planner
+# Grind ’n Grow – Smart Study & Focus Planner
 
 > “Consistency isn’t about perfection. It’s about progress that never stops.”
 
 ---
 
-## 📘 Overview
+##  Overview
 
 **Grind ’n Grow** is a productivity web app designed to help students stay focused, consistent, and motivated while completing their syllabus.  
 It combines **time tracking, intelligent scheduling, and motivational systems** into one personalized study planner.
@@ -13,7 +13,7 @@ The platform is powered by **Python (Flask)** for backend logic and **HTML, CSS,
 
 ---
 
-## 🎯 Problem Statement
+##  Problem Statement
 
 Students often struggle with:
 - Staying consistent with their study goals  
@@ -25,7 +25,7 @@ Students often struggle with:
 
 ---
 
-## ⚙️ Tech Stack
+##  Tech Stack
 
 | Layer | Technology Used |
 |-------|------------------|
@@ -39,35 +39,35 @@ Students often struggle with:
 
 ---
 
-## 🚀 Key Features
+##  Key Features
 
-### 🧠 Focus & Time Management
+###  Focus & Time Management
 - Start, pause, and stop custom study sessions  
 - Auto track completed hours per task  
 - Countdown timer with progress sync  
 
-### 📅 Smart Scheduler
+###  Smart Scheduler
 - User Can Generate a **weekly plan** based on study hours  
 - Adjusts daily slots between **9 AM – 9 PM**  
 - Deletes old sessions before new ones are generated  
 
-### 🎓 Task Management
+### Task Management
 - Add, edit, or delete subjects and tasks  
 - Set deadlines and priorities  
 - Visualize subject-wise completion  
 
-### 💪 Motivation System
+###  Motivation System
 - Dynamic daily quotes on consistency and discipline  
 - Refreshes every day and resets every Monday  
 
-### 📊 Progress Tracking
+###  Progress Tracking
 - Weekly progress percentage  
 - Subject-wise breakdown  
 - Incomplete tasks are rolled forward automatically  
 
 ---
 
-## 🧩 API Endpoints
+##  API Endpoints
 
 | Method | Endpoint | Description |
 |:-------|:----------|:------------|
@@ -83,9 +83,9 @@ Students often struggle with:
 
 ---
 
-## 🧰 Installation & Setup
+##  Installation & Setup
 
-### 1️⃣ Clone the Repository
+###  Clone the Repository
 ```bash
 git clone https://github.com/yourusername/grind-n-grow.git
 cd grind-n-grow
